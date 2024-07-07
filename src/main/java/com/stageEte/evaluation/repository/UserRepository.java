@@ -1,5 +1,6 @@
-package com.stageEte.evaluation.user;
+package com.stageEte.evaluation.repository;
 
+import com.stageEte.evaluation.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

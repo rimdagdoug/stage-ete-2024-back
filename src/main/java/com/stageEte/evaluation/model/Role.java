@@ -1,4 +1,4 @@
-package com.stageEte.evaluation.user;
+package com.stageEte.evaluation.model;
 
 public enum Role {
     DEVELOPER,
