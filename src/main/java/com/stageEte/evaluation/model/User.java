@@ -1,4 +1,4 @@
-package com.stageEte.evaluation.user;
+package com.stageEte.evaluation.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
