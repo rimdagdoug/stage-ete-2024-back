@@ -1,8 +1,8 @@
 package com.stageEte.evaluation.auth;
 
 import com.stageEte.evaluation.config.JwtService;
-import com.stageEte.evaluation.user.User;
-import com.stageEte.evaluation.user.UserRepository;
+import com.stageEte.evaluation.model.User;
+import com.stageEte.evaluation.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

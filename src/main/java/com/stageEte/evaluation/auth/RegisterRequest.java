@@ -1,6 +1,6 @@
 package com.stageEte.evaluation.auth;
 
-import com.stageEte.evaluation.user.Role;
+import com.stageEte.evaluation.model.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
