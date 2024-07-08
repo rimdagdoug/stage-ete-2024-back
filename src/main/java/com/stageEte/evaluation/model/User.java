@@ -1,4 +1,4 @@
-package com.stageEte.evaluation.user;
+package com.stageEte.evaluation.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -21,7 +21,7 @@ import java.util.List;
 public class User implements  UserDetails {
     @Id
     @GeneratedValue
-    private Integer id;
+    private Long id;
     private  String firstname;
     private String lastname;
     private  String email;
