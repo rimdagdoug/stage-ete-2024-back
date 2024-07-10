@@ -10,15 +10,32 @@ import java.util.Date;
 
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Entity
-public class Skills {
+public class ResultEvaluation {
+
     @Id
     @GeneratedValue
     private Long id;
-    private  String name;
-    private  String description;
+
+    @ManyToOne
+    @JoinColumn(name = "Skills_id",nullable = false)
+    private  Skills skills;
+
+    @ManyToOne
+    @JoinColumn(name = "evaluation_id",nullable = false)
+    private Evaluation evaluation;
+
+    private String commentaire;
+
+    private Float noteDeveloper;
+    private Float noteManager;
+    private Float finalNote;
+
+    @Enumerated(EnumType.STRING)
+    private EvaluationStatus status;
+
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_at", nullable = false, updatable = false)
     @Builder.Default
@@ -27,8 +44,6 @@ public class Skills {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "updated_at", nullable = false)
     private Date updatedAt;
-
-    private float coefficient;
 
     @PrePersist
     protected void onCreate() {
@@ -39,4 +54,5 @@ public class Skills {
     protected void onUpdate() {
         updatedAt = new Date();
     }
+
 }

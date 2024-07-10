@@ -32,7 +32,7 @@ public class SkillsService {
         }
     }
 
-    public ResponseEntity<Skills> detailSkill(Integer id) {
+    public ResponseEntity<Skills> detailSkill(Long id) {
         Optional<Skills> skill = skillsRepository.findById(id);
         if(skill.isPresent()){
             return  new ResponseEntity<>(skill.get(),HttpStatus.OK);
@@ -44,7 +44,7 @@ public class SkillsService {
         return new ResponseEntity<>(skillsRepository.save(skill), HttpStatus.OK);
     }
 
-    public ResponseEntity<Skills> updateSkill(Integer id, Skills request) {
+    public ResponseEntity<Skills> updateSkill(Long id, Skills request) {
         try {
             Optional<Skills> skillToUpdate = skillsRepository.findById(id);
             if (skillToUpdate.isPresent()) {
@@ -62,7 +62,7 @@ public class SkillsService {
         }
     }
 
-    public ResponseEntity<String> deleteSkill(Integer id) {
+    public ResponseEntity<String> deleteSkill(Long id) {
         try {
             if (skillsRepository.existsById(id)) {
                 skillsRepository.deleteById(id);
