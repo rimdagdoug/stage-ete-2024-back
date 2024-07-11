@@ -31,7 +31,7 @@ public class EvaluationService {
         }
     }
 
-    public ResponseEntity<Evaluation> detailEvaluation(Integer id) {
+    public ResponseEntity<Evaluation> detailEvaluation(Long id) {
         Optional<Evaluation> evaluation = evaluationRepository.findById(id);
         return evaluation.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
@@ -52,7 +52,7 @@ public class EvaluationService {
         }
     }
 
-    public ResponseEntity<Evaluation> updateEvaluation(Integer id, EvaluationDTO evaluationDetails) {
+    public ResponseEntity<Evaluation> updateEvaluation(Long id, EvaluationDTO evaluationDetails) {
         try {
             Optional<Evaluation> evaluationOptional = evaluationRepository.findById(id);
             if (evaluationOptional.isPresent()) {
@@ -71,7 +71,7 @@ public class EvaluationService {
         }
     }
 
-    public ResponseEntity<String> deleteEvaluation(Integer id) {
+    public ResponseEntity<String> deleteEvaluation(Long id) {
         try {
             if (evaluationRepository.existsById(id)) {
                 evaluationRepository.deleteById(id);

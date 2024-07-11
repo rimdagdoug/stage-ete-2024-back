@@ -21,7 +21,7 @@ public class EvaluationController {
     }
 
     @GetMapping("/evaluations/{id}")
-    public ResponseEntity<Evaluation> detailEvaluation(@PathVariable Integer id) {
+    public ResponseEntity<Evaluation> detailEvaluation(@PathVariable Long id) {
         return service.detailEvaluation(id);
     }
 
@@ -31,12 +31,12 @@ public class EvaluationController {
     }
 
     @PutMapping("/evaluations/{id}")
-    public ResponseEntity<Evaluation> updateEvaluation(@PathVariable Integer id, @RequestBody EvaluationDTO request) {
+    public ResponseEntity<Evaluation> updateEvaluation(@PathVariable Long id, @RequestBody EvaluationDTO request) {
         return service.updateEvaluation(id, request);
     }
 
     @DeleteMapping("/evaluations/{id}")
-    public ResponseEntity<String> deleteEvaluation(@PathVariable Integer id) {
+    public ResponseEntity<String> deleteEvaluation(@PathVariable Long id) {
         return service.deleteEvaluation(id);
     }
 }

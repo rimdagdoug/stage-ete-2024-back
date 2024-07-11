@@ -22,7 +22,7 @@ public class SkillsController {
     }
 
     @GetMapping("/skills/{id}")
-    public ResponseEntity<Skills> detailSkill(@PathVariable Integer id){
+    public ResponseEntity<Skills> detailSkill(@PathVariable Long id){
         return service.detailSkill(id);
     }
 
@@ -32,12 +32,12 @@ public class SkillsController {
     }
 
     @PutMapping("/skills/{id}")
-    public ResponseEntity<Skills> updateSkill(@PathVariable Integer id, @RequestBody Skills request){
+    public ResponseEntity<Skills> updateSkill(@PathVariable Long id, @RequestBody Skills request){
         return  service.updateSkill(id,request);
     }
 
     @DeleteMapping("/skills/{id}")
-    public ResponseEntity<String> deleteSkill(@PathVariable Integer id) {
+    public ResponseEntity<String> deleteSkill(@PathVariable Long id) {
         return service.deleteSkill(id);
     }
 
