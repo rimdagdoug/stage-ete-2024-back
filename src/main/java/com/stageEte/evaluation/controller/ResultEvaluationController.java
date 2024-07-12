@@ -1,9 +1,9 @@
 package com.stageEte.evaluation.controller;
 
-import com.stageEte.evaluation.dto.ResultEvaluationDTO;
+import com.stageEte.evaluation.dto.NoteEvalDTO;
+import com.stageEte.evaluation.dto.ResultEvaluationMultipleDTO;
 import com.stageEte.evaluation.model.ResultEvaluation;
 import com.stageEte.evaluation.service.ResultEvaluationService;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -19,9 +19,10 @@ import java.util.List;
 public class ResultEvaluationController {
     private final ResultEvaluationService service;
 
-    @PostMapping
-    public ResponseEntity<ResultEvaluation> addResultEvaluation(@RequestBody ResultEvaluationDTO dto) {
-        return service.addResultEvaluation(dto);
+
+    @PostMapping("")
+    public ResponseEntity<String> addMultipleResultEvaluations(@RequestBody ResultEvaluationMultipleDTO dtos) {
+        return service.addMultipleResultEvaluations(dtos);
     }
 
     @GetMapping
@@ -34,16 +35,22 @@ public class ResultEvaluationController {
         return service.detailEvaluation(id);
     }
 
-    @PutMapping("/noteInput/{id}")
-    public ResponseEntity<ResultEvaluation> updateResultEvaluation(
-            @PathVariable @NotNull Long id,
-            @RequestBody ResultEvaluationDTO dto,
+    @PutMapping("/noteInput")
+    public ResponseEntity<String> updateResultEvaluationMultiple(
+            @RequestBody NoteEvalDTO dto,
             Principal connectedUser) {
-        return service.noteInput(id, dto, connectedUser);
+        return service.noteInputMultiple(dto, connectedUser);
     }
 
+    @GetMapping("/allNote")
+    public ResponseEntity<List<ResultEvaluation>> getAllNoteResultEvaluations() {
+        return service.getAllNoteResultEvaluations();
+    }
 
-
+    @GetMapping("/updateFinalScore")
+    public ResponseEntity<Float> updateFinalScore(@RequestParam Long evaluationId) {
+        return service.updateFinalScore(evaluationId);
+    }
 
 
 

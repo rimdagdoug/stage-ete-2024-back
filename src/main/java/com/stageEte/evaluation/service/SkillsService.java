@@ -1,12 +1,16 @@
 package com.stageEte.evaluation.service;
 
+import com.stageEte.evaluation.model.Role;
 import com.stageEte.evaluation.model.Skills;
+import com.stageEte.evaluation.model.User;
 import com.stageEte.evaluation.repository.SkillsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -41,11 +45,12 @@ public class SkillsService {
     }
 
     public ResponseEntity<Skills> addSkill(Skills skill) {
-        return new ResponseEntity<>(skillsRepository.save(skill), HttpStatus.OK);
+            return new ResponseEntity<>(skillsRepository.save(skill), HttpStatus.OK);
     }
 
     public ResponseEntity<Skills> updateSkill(Long id, Skills request) {
         try {
+
             Optional<Skills> skillToUpdate = skillsRepository.findById(id);
             if (skillToUpdate.isPresent()) {
                 Skills skill = skillToUpdate.get();
@@ -57,6 +62,7 @@ public class SkillsService {
             } else {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
+
         } catch (Exception ex) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -74,5 +80,7 @@ public class SkillsService {
         } catch (Exception ex) {
             return new ResponseEntity<>("An error occurred", HttpStatus.INTERNAL_SERVER_ERROR);
         }
+
     }
+
 }
