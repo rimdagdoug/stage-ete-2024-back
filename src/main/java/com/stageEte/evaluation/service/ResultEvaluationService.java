@@ -2,7 +2,6 @@ package com.stageEte.evaluation.service;
 
 import com.stageEte.evaluation.dto.NoteEvalDTO;
 import com.stageEte.evaluation.dto.ResultEvaluationDTO;
-import com.stageEte.evaluation.dto.ResultEvaluationMultipleDTO;
 import com.stageEte.evaluation.dto.SkillDTO;
 import com.stageEte.evaluation.model.*;
 import com.stageEte.evaluation.repository.EvaluationRepository;
@@ -26,7 +25,6 @@ public class ResultEvaluationService {
     private final ResultEvaluationRepository resultEvaluationRepository;
     private final EvaluationRepository evaluationRepository;
     private final UserRepository userRepository;
-
     public ResponseEntity<List<ResultEvaluation>> listResultEvaluations(){
         try {
             List<ResultEvaluation> resultEvaluations = resultEvaluationRepository.findAll();
@@ -45,14 +43,13 @@ public class ResultEvaluationService {
                 .orElseGet(()->new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    public ResponseEntity<String> addMultipleResultEvaluations(ResultEvaluationMultipleDTO dto) {
+    public ResponseEntity<String> addSkillsToEvaluation(Role role, Long idEvaluation) {
         try {
-
-            for (Long skillId : dto.skillId()) {
-                createNewResultEvaluation(dto.evaluationId(), skillId);
-            }
-            return new ResponseEntity<>("Success insert", HttpStatus.CREATED);
-
+        List<Skills> skills = skillsRepository.findByskillType(role);
+        for (Skills skill : skills) {
+            createNewResultEvaluation(idEvaluation, skill.getId());
+        }
+        return new ResponseEntity<>("Success insert", HttpStatus.CREATED);
         } catch (Exception ex) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -65,7 +62,7 @@ public class ResultEvaluationService {
         var evaluation = evaluationRepository.findById(evaluationId)
                 .orElseThrow(() -> new RuntimeException("Evaluation not found"));
 
-        // Trouver la compétence par son ID
+        // Trouver la compétence par son ID (remarque : ici, l'ID est déjà connu)
         var skill = skillsRepository.findById(skillId)
                 .orElseThrow(() -> new RuntimeException("Skill not found"));
 
@@ -185,6 +182,7 @@ public class ResultEvaluationService {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 
 }
 

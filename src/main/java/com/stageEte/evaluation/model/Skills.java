@@ -19,6 +19,9 @@ public class Skills {
     private Long id;
     private  String name;
     private  String description;
+
+    @Enumerated(EnumType.STRING)
+    private Role skillType;
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_at", nullable = false, updatable = false)
     @Builder.Default

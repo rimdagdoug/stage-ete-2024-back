@@ -19,12 +19,6 @@ import java.util.List;
 public class ResultEvaluationController {
     private final ResultEvaluationService service;
 
-
-    @PostMapping("")
-    public ResponseEntity<String> addMultipleResultEvaluations(@RequestBody ResultEvaluationMultipleDTO dtos) {
-        return service.addMultipleResultEvaluations(dtos);
-    }
-
     @GetMapping
     public ResponseEntity<List<ResultEvaluation>> getAllResultEvaluations() {
         return service.listResultEvaluations();
