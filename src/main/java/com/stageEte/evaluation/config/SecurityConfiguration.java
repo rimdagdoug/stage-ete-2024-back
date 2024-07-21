@@ -1,5 +1,6 @@
 package com.stageEte.evaluation.config;
 
+import com.stageEte.evaluation.model.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,6 +26,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests()
                 .requestMatchers("/api/auth/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/swagger-ui/index.html")
                 .permitAll()
+                .requestMatchers("/api/skills/**").hasAnyRole("RH")
                 .anyRequest()
                 .authenticated()
                 .and()

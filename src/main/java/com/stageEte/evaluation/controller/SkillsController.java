@@ -4,6 +4,7 @@ import com.stageEte.evaluation.model.Skills;
 import com.stageEte.evaluation.service.SkillsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -17,6 +18,7 @@ public class SkillsController {
     private final SkillsService service;
 
 
+    @PreAuthorize("hasAnyRole('RH')")
     @GetMapping("/skills")
     public ResponseEntity<List<Skills>> listSkills(){
         return service.listSkills();

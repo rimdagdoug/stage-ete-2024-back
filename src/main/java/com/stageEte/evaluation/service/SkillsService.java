@@ -5,6 +5,7 @@ import com.stageEte.evaluation.model.Skills;
 import com.stageEte.evaluation.model.User;
 import com.stageEte.evaluation.repository.SkillsRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,7 +25,7 @@ public class SkillsService {
     public ResponseEntity<List<Skills>> listSkills() {
         try{
             List<Skills> skills = new ArrayList<>();
-            skillsRepository.findAll().forEach(skills::add);
+            skillsRepository.findAll(Sort.by(Sort.Direction.DESC, "id")).forEach(skills::add);
 
             if(skills.isEmpty()){
                 return new ResponseEntity<>(skills, HttpStatus.NO_CONTENT);
@@ -57,6 +58,7 @@ public class SkillsService {
                 skill.setName(request.getName());
                 skill.setDescription(request.getDescription());
                 skill.setCoefficient(request.getCoefficient());
+                skill.setSkillType(request.getSkillType());
                 skill.setUpdatedAt(new Date()); // Update the timestamp
                 return new ResponseEntity<>(skillsRepository.save(skill), HttpStatus.OK);
             } else {

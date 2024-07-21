@@ -2,6 +2,7 @@ package com.stageEte.evaluation.service;
 
 import com.stageEte.evaluation.dto.EvaluationDTO;
 import com.stageEte.evaluation.model.Evaluation;
+import com.stageEte.evaluation.model.Role;
 import com.stageEte.evaluation.model.User;
 import com.stageEte.evaluation.repository.EvaluationRepository;
 import com.stageEte.evaluation.repository.UserRepository;
@@ -19,6 +20,7 @@ public class EvaluationService {
 
     private final EvaluationRepository evaluationRepository;
     private final UserRepository userRepository;
+    private final ResultEvaluationService resultEvaluationService;
     public ResponseEntity<List<Evaluation>> listEvaluations() {
         try {
             List<Evaluation> evaluations = evaluationRepository.findAll();
@@ -40,12 +42,19 @@ public class EvaluationService {
     public ResponseEntity<Evaluation> addEvaluation(EvaluationDTO evaluationDetails) {
         try {
              Evaluation evaluation = new Evaluation();
-            User developer = userRepository.findById(evaluationDetails.developerId()).orElse(null);
+            User collaborateur = userRepository.findById(evaluationDetails.developerId()).orElse(null);
             User manager = userRepository.findById(evaluationDetails.managerId()).orElse(null);
-            evaluation.setDeveloper(developer);
+
+
+            evaluation.setDeveloper(collaborateur);
             evaluation.setManager(manager);
             evaluation.setStatus(evaluationDetails.statut());
             Evaluation savedEvaluation = evaluationRepository.save(evaluation);
+            // Evaluation crée
+            // ajout des competeneces dans l'evaluation
+            Role role = collaborateur.getRole();
+            Long idEvaluation = savedEvaluation.getId();
+            resultEvaluationService.addSkillsToEvaluation(role, idEvaluation);
             return new ResponseEntity<>(savedEvaluation, HttpStatus.CREATED);
         } catch (Exception ex) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

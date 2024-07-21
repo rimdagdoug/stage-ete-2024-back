@@ -26,6 +26,9 @@ public class User implements  UserDetails {
     private String lastname;
     private  String email;
     private String password;
+
+    @Column(unique = true)
+    private String username;
     @Enumerated(EnumType.STRING)
     private Role role;
 
@@ -43,7 +46,6 @@ public class User implements  UserDetails {
     public String getUsername() {
         return email;
     }
-
     @Override
     public boolean isAccountNonExpired() {
         return true;
