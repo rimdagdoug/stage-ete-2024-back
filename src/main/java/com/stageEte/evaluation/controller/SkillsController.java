@@ -18,7 +18,7 @@ public class SkillsController {
     private final SkillsService service;
 
 
-    @PreAuthorize("hasAnyRole('RH')")
+    @PreAuthorize("hasAuthority('RH')") // Vérifie si l'utilisateur a l'autorité 'ADMIN'
     @GetMapping("/skills")
     public ResponseEntity<List<Skills>> listSkills(){
         return service.listSkills();
