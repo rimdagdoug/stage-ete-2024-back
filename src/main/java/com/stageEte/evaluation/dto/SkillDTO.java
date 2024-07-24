@@ -4,6 +4,9 @@ public class SkillDTO {
     private long skillId;
     private Float note;
 
+    private String name;
+
+    private String description;
     public long getSkillId() {
         return skillId;
     }

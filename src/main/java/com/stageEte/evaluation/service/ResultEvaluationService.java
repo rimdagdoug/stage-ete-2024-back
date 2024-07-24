@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
@@ -37,10 +38,9 @@ public class ResultEvaluationService {
         }
     }
 
-    public ResponseEntity<ResultEvaluation> detailEvaluation(Long id){
-        Optional<ResultEvaluation> resultEvaluation = resultEvaluationRepository.findById(id);
-        return resultEvaluation.map(value -> new ResponseEntity<>(value,HttpStatus.OK))
-                .orElseGet(()->new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    public ResponseEntity<List<ResultEvaluation>> getResultatEvaluationByIdEval(Long idEval){
+        List<ResultEvaluation> resultEvaluation = resultEvaluationRepository.findByEvaluationId(idEval);
+        return new ResponseEntity<>(resultEvaluation, HttpStatus.OK);
     }
 
     public ResponseEntity<String> addSkillsToEvaluation(Role role, Long idEvaluation) {
@@ -76,7 +76,7 @@ public class ResultEvaluationService {
 
     public ResponseEntity<String> noteInputMultiple(NoteEvalDTO dto, Principal connectedUser) {
         try {
-            var user = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
+            var user = (org.springframework.security.core.userdetails.User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
 
             for (SkillDTO eval : dto.getSkills()) {
                 ResultEvaluation resultOptional = resultEvaluationRepository.findByEvaluationIdAndSkillsId(dto.getEvaluationId(), eval.getSkillId());
@@ -85,31 +85,42 @@ public class ResultEvaluationService {
                 }
                 inputNoteSkill(eval.getNote(), user, resultOptional);
             }
+            String jsonResponse = "{\"message\": \"saved Result\"}";
+            return ResponseEntity.ok(jsonResponse);
 
-            return new ResponseEntity<>("saved Result", HttpStatus.OK);
         } catch (Exception ex) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    private ResultEvaluation inputNoteSkill(Float note, User user, ResultEvaluation result) {
-        if (note != null && user.getRole() == Role.DEVELOPER && user.getId() == result.getEvaluation().getDeveloper().getId()) {
+    private ResultEvaluation inputNoteSkill(Float note, org.springframework.security.core.userdetails.User user, ResultEvaluation result) {
+
+
+
+         if (note != null && isHasAuthority(user,Role.DEVELOPER.name())) {
             result.setNoteDeveloper(note);
             result.setStatus(EvaluationStatus.DEVELOPER_INPUT_COMPLETED);
         }
 
-        else if (note != null && user.getRole() == Role.MANAGER && user.getId() == result.getEvaluation().getManager().getId()) {
+        else if (note != null && isHasAuthority(user,Role.MANAGER.name())) {
             result.setNoteManager(note);
             result.setStatus(EvaluationStatus.VALIDATED_BY_MANAGER);
         }
 
-        else if (note != null && user.getRole() == Role.RH) {
+        else if (note != null && isHasAuthority(user,Role.RH.name())) {
             result.setFinalNote(note);
             result.setStatus(EvaluationStatus.COMPLETED);
         }
         ResultEvaluation savedResult = resultEvaluationRepository.save(result);
         return savedResult;
     }
+
+    private static boolean isHasAuthority(org.springframework.security.core.userdetails.User user , String role) {
+        return user.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .anyMatch(authority -> authority.equals(role));
+    }
+
     private ResultEvaluation inputNote(ResultEvaluationDTO dto, User user, Optional<ResultEvaluation> resultOptional) {
         ResultEvaluation result = resultOptional.get();
 
