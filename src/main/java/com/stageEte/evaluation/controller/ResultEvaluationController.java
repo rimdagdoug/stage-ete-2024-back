@@ -1,7 +1,6 @@
 package com.stageEte.evaluation.controller;
 
 import com.stageEte.evaluation.dto.NoteEvalDTO;
-import com.stageEte.evaluation.dto.ResultEvaluationMultipleDTO;
 import com.stageEte.evaluation.model.ResultEvaluation;
 import com.stageEte.evaluation.service.ResultEvaluationService;
 import lombok.RequiredArgsConstructor;
@@ -25,8 +24,8 @@ public class ResultEvaluationController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ResultEvaluation> getResultEvaluationById(@PathVariable Long id) {
-        return service.detailEvaluation(id);
+    public ResponseEntity<List<ResultEvaluation>> getResultEvaluationByIdEval(@PathVariable Long id) {
+        return service.getResultatEvaluationByIdEval(id);
     }
 
     @PutMapping("/noteInput")
