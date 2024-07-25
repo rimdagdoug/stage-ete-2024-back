@@ -50,4 +50,8 @@ public class Evaluation {
     protected void onUpdate() {
         updatedAt = new Date();
     }
+
+    public boolean getStatus(EvaluationStatus awaitingManagerValidation) {
+        return true;
+    }
 }

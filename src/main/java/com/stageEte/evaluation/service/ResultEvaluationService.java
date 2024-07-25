@@ -94,26 +94,47 @@ public class ResultEvaluationService {
     }
 
     private ResultEvaluation inputNoteSkill(Float note, org.springframework.security.core.userdetails.User user, ResultEvaluation result) {
+        Evaluation evaluation = result.getEvaluation();
 
-
-
-         if (note != null && isHasAuthority(user,Role.DEVELOPER.name())) {
+        // Check if the developer is inputting their note
+        if (note != null && isHasAuthority(user, Role.DEVELOPER.name())) {
             result.setNoteDeveloper(note);
-            result.setStatus(EvaluationStatus.DEVELOPER_INPUT_COMPLETED);
+            result.setStatus(EvaluationStatus.AWAITING_MANAGER_VALIDATION);
+            evaluation.setStatus(EvaluationStatus.AWAITING_MANAGER_VALIDATION);
         }
-
-        else if (note != null && isHasAuthority(user,Role.MANAGER.name())) {
+        // Check if the manager is inputting their note and the status is not AWAITING_DEVELOPER_INPUT
+        else if (note != null && isHasAuthority(user, Role.MANAGER.name()) && !result.getStatus().equals(EvaluationStatus.AWAITING_DEVELOPER_INPUT)) {
             result.setNoteManager(note);
             result.setStatus(EvaluationStatus.VALIDATED_BY_MANAGER);
+            evaluation.setStatus(EvaluationStatus.VALIDATED_BY_MANAGER);
         }
-
-        else if (note != null && isHasAuthority(user,Role.RH.name())) {
+        // Check if the RH is inputting the final note and the status is AWAITING_HR_APPROVAL
+        else if (note != null && isHasAuthority(user, Role.RH.name()) && !result.getStatus().equals(EvaluationStatus.AWAITING_HR_APPROVAL)) {
             result.setFinalNote(note);
             result.setStatus(EvaluationStatus.COMPLETED);
+            evaluation.setStatus(EvaluationStatus.COMPLETED);
         }
+        // If the manager tries to input a note while the status is AWAITING_DEVELOPER_INPUT, throw an exception
+        else if (note != null && isHasAuthority(user, Role.MANAGER.name()) && result.getStatus().equals(EvaluationStatus.AWAITING_DEVELOPER_INPUT)) {
+            throw new IllegalStateException("Le manager ne peut pas saisir les notes tant que le statut est AWAITING_DEVELOPER_INPUT.");
+        }
+        // If the RH tries to input a note while the status is not AWAITING_HR_APPROVAL, throw an exception
+        else if (note != null && isHasAuthority(user, Role.RH.name()) && !result.getStatus().equals(EvaluationStatus.AWAITING_HR_APPROVAL)) {
+            throw new IllegalStateException("Le RH ne peut saisir les notes que lorsque le statut est AWAITING_HR_APPROVAL.");
+        }
+
+        // Check if both developer and manager have input their notes
+        if (result.getNoteDeveloper() != null && result.getNoteManager() != null) {
+            evaluation.setStatus(EvaluationStatus.AWAITING_HR_APPROVAL);
+        }
+
+        // Save the updated evaluation and result
+        evaluationRepository.save(evaluation);
         ResultEvaluation savedResult = resultEvaluationRepository.save(result);
         return savedResult;
     }
+
+
 
     private static boolean isHasAuthority(org.springframework.security.core.userdetails.User user , String role) {
         return user.getAuthorities().stream()
