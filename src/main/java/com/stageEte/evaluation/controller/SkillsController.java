@@ -4,9 +4,11 @@ import com.stageEte.evaluation.model.Skills;
 import com.stageEte.evaluation.service.SkillsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -16,6 +18,7 @@ public class SkillsController {
     private final SkillsService service;
 
 
+    @PreAuthorize("hasAuthority('RH')") // Vérifie si l'utilisateur a l'autorité 'ADMIN'
     @GetMapping("/skills")
     public ResponseEntity<List<Skills>> listSkills(){
         return service.listSkills();

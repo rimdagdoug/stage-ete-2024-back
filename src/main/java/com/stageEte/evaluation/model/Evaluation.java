@@ -39,6 +39,8 @@ public class Evaluation {
     @Column(name = "updated_at", nullable = false)
     private Date updatedAt;
 
+    private Float finalNote;
+
     @PrePersist
     protected void onCreate() {
         updatedAt = createdAt = new Date();
@@ -47,5 +49,9 @@ public class Evaluation {
     @PreUpdate
     protected void onUpdate() {
         updatedAt = new Date();
+    }
+
+    public boolean getStatus(EvaluationStatus awaitingManagerValidation) {
+        return true;
     }
 }

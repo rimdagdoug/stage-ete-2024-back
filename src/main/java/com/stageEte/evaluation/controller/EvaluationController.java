@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -16,8 +17,8 @@ public class EvaluationController {
     private final EvaluationService service;
 
     @GetMapping("/evaluations")
-    public ResponseEntity<List<Evaluation>> listEvaluations() {
-        return service.listEvaluations();
+    public ResponseEntity<List<Evaluation>> listEvaluations(Principal principal) {
+        return service.listEvaluations(principal);
     }
 
     @GetMapping("/evaluations/{id}")
